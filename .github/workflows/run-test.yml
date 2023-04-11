@@ -1,4 +1,4 @@
-name: run-lint
+name: run-jest
 
 on:
   push:
@@ -18,4 +18,5 @@ jobs:
         cache: 'npm'
     
     - run: npm install
+    - run: make test
     - run: make lint

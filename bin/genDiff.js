@@ -2,4 +2,4 @@
 
 import { startGenDiffCommand } from '../src/index.js';
 
-startGenDiffCommand()
+startGenDiffCommand();

@@ -1,6 +1,5 @@
 name: run-lint
 
-
 on:
   push:
     branches:

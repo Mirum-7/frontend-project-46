@@ -25,7 +25,7 @@ export const getUnionKeys = (...objects) => _.union(...objects.map(Object.keys))
 //   return [...diff, result];
 // });
 
-const genDiff = (filePath1, filePath2, options) => {
+const genDiff = (filePath1, filePath2) => {
   const contentFile1 = readFrom(filePath1);
   const contentFile2 = readFrom(filePath2);
 

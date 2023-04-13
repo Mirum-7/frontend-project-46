@@ -6,17 +6,15 @@ import { readFrom, getUnionKeys } from '../src/index.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-let relativePath;
+const getFixturePath = (filename) => path.join(__dirname, '..', '__fixtures__', filename);
+
 let fileName;
-let fullPath;
 
 let obj1;
 let obj2;
 
 beforeAll(() => {
-  relativePath = '../__fixtures__/';
   fileName = 'file.json';
-  fullPath = path.join(__dirname, relativePath, fileName);
 });
 
 beforeEach(() => {
@@ -38,7 +36,7 @@ beforeEach(() => {
 
 describe('work with file', () => {
   test('Read file', () => {
-    const content = readFrom(fullPath);
+    const content = readFrom(getFixturePath(fileName));
 
     expect(content).toEqual(`{
   "host": "hexlet.io",

@@ -20,6 +20,10 @@
   "bin": {
     "genDiff": "./bin/genDiff.js"
   },
+  "jest": {
+    "testEnvironment": "node",
+    "transform": {}
+  },
   "devDependencies": {
     "eslint": "^8.38.0",
     "eslint-config-airbnb-base": "^15.0.0",

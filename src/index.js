@@ -10,21 +10,6 @@ export const readFrom = (path) => readFileSync(Path.resolve(path), 'utf-8');
 
 export const getUnionKeys = (...objects) => _.union(...objects.map(Object.keys)).sort();
 
-// const getDiff = (obj1, obj2) => getUnionKeys(obj1, obj2).reduce((diff, key) => {
-//   if (obj1[key] === obj2[key]) {
-//     return [...diff, { [key]: obj1[key] }];
-//   }
-
-//   if (obj1.hasOwnProperty(key)) {
-//     result.push(`${f1Sep}${key}:${obj1[key]}`);
-//   }
-//   if (obj2.hasOwnProperty(key)) {
-//     result.push(`${f2Sep}${key}:${obj2[key]}`);
-//   }
-
-//   return [...diff, result];
-// });
-
 const genDiff = (filePath1, filePath2) => {
   const contentFile1 = readFrom(filePath1);
   const contentFile2 = readFrom(filePath2);

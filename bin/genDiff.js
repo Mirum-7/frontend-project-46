@@ -1,5 +1,5 @@
 #!/usr/bin/env node
 
-import { startGenDiffCommand } from '../src/index.js';
+import { runGenDiffCommand } from '../src/index.js';
 
-startGenDiffCommand();
+runGenDiffCommand();

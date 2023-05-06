@@ -9,7 +9,8 @@
     ],
     "plugins": [
         "jest",
-        "lodash"
+        "lodash",
+        "js-yaml"
     ],
     "overrides": [
     ],

@@ -1,14 +1,15 @@
 import path from 'node:path';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
-import genDiff, { getUnionKeys, printDiff, readFrom } from '../src/index.js';
+import genDiff, { getUnionKeys, parse, printDiff } from '../src/index.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const getFixturePath = (filename) => path.join(__dirname, '..', '__fixtures__', filename);
 
-let fileName;
+let jsonFileName;
+let yamlFileName;
 
 let obj1;
 let obj2;
@@ -16,7 +17,8 @@ let obj2;
 let genDiffObj;
 
 beforeAll(() => {
-  fileName = 'file.json';
+  jsonFileName = 'file.json';
+  yamlFileName = 'file.yaml';
   genDiffObj = {
     1: {
       first: 'line 1',
@@ -60,15 +62,20 @@ beforeEach(() => {
 });
 
 describe('work with file', () => {
-  test('Read file', () => {
-    const content = readFrom(getFixturePath(fileName));
+  test('parse file', () => {
+    let content = parse(getFixturePath(jsonFileName));
+    const result = {
+      host: 'hexlet.io',
+      timeout: 50,
+      proxy: '123.234.53.22',
+      follow: false,
+    };
 
-    expect(content).toEqual(`{
-  "host": "hexlet.io",
-  "timeout": 50,
-  "proxy": "123.234.53.22",
-  "follow": false
-}`);
+    expect(content).toEqual(result); // json file
+
+    content = parse(getFixturePath(yamlFileName));
+
+    expect(content).toEqual(result); // yaml file
   });
 });
 

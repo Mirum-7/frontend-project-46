@@ -28,6 +28,32 @@ const genDiff = (obj1, obj2) => {
   }, {});
 };
 
+export const printDiff = (obj) => {
+  const sep = '   ';
+  const f1sep = ' - ';
+  const f2sep = ' + ';
+
+  const text = Object.entries(obj).reduce((lines, [key, value]) => {
+    if (value.first === value.second) {
+      return [...lines, `${sep}${key}: ${value.first}`];
+    }
+
+    const result = [];
+
+    if (value.hasOwnProperty('first')) {
+      result.push(`${f1sep}${key}: ${value.first}`);
+    }
+
+    if (value.hasOwnProperty('second')) {
+      result.push(`${f2sep}${key}: ${value.second}`);
+    }
+
+    return [...lines, ...result];
+  }, []).join(',\n');
+
+  return `{\n${text}\n}`;
+};
+
 export const runGenDiffCommand = () => {
   program
     .name('genDiff')

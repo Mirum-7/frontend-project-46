@@ -54,6 +54,18 @@ export const printDiff = (obj) => {
   return `{\n${text}\n}`;
 };
 
+export const compareFiles = (path1, path2) => {
+  const data1 = readFrom(path1);
+  const data2 = readFrom(path2);
+
+  const obj1 = JSON.parse(data1);
+  const obj2 = JSON.parse(data2);
+
+  const comparedObj = genDiff(obj1, obj2);
+
+  console.log(printDiff(comparedObj));
+};
+
 export const runGenDiffCommand = () => {
   program
     .name('genDiff')
@@ -64,7 +76,7 @@ export const runGenDiffCommand = () => {
     .option('-f, --format <type>', 'output format')
     .argument('<filepath1>')
     .argument('<filepath2>')
-    .action(/* func */);
+    .action(compareFiles);
 
   program.parse(process.argv);
 };

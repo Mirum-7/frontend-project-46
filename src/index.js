@@ -24,45 +24,80 @@ export const parse = (path) => {
 const genDiff = (obj1, obj2) => {
   const keys = getUnionKeys(obj1, obj2);
 
-  return keys.reduce((result, key) => {
-    const values = {};
+  const result = keys.map((key) => {
+    const obj = { key };
 
+    if (obj1[key] instanceof Object && obj2[key] instanceof Object) {
+      obj.children = genDiff(obj1[key], obj2[key]);
+      return obj;
+    }
+
+    if (obj1.hasOwnProperty(key) && obj2.hasOwnProperty(key) && obj1[key] === obj2[key]) {
+      obj.value = obj1[key];
+      return obj;
+    }
     if (obj1.hasOwnProperty(key)) {
-      values.first = obj1[key];
+      obj.value1 = obj1[key];
     }
-
     if (obj2.hasOwnProperty(key)) {
-      values.second = obj2[key];
+      obj.value2 = obj2[key];
     }
-
-    return { ...result, [key]: values };
+    return obj;
   }, {});
+
+  return result;
 };
 
 export const printDiff = (obj) => {
-  const sep = '   ';
-  const f1sep = ' - ';
-  const f2sep = ' + ';
+  const sep = '    ';
+  const f1sep = '  - ';
+  const f2sep = '  + ';
 
-  const text = Object.entries(obj).reduce((lines, [key, value]) => {
-    if (value.first === value.second) {
-      return [...lines, `${sep}${key}: ${value.first}`];
+  const printObj = (simpleObj, fileSep, parentKey, deep, firstStart = true) => {
+    const textObj = Object.entries(simpleObj).map(([key, value]) => {
+      if (value instanceof Object) {
+        return `${sep.repeat(deep + 1)}${printObj(value, fileSep, key, deep + 1, false)}`;
+      }
+      return `${sep.repeat(deep + 1)}${key}: ${value}`;
+    }, []).join('\n');
+
+    if (firstStart) {
+      return `${sep.repeat(deep - 1)}${fileSep}${parentKey}: {\n${textObj}\n${sep.repeat(deep)}}`;
     }
+    return `${parentKey}: {\n${textObj}\n${sep.repeat(deep)}}`;
+  };
 
-    const result = [];
+  const iter = (list, deep) => {
+    const text = list.flatMap((el) => {
+      if (el.hasOwnProperty('children')) {
+        return `${sep.repeat(deep)}${el.key}: {\n${iter(el.children, deep + 1)}\n${sep.repeat(deep)}}`;
+      }
+      if (el.hasOwnProperty('value')) {
+        return `${sep.repeat(deep)}${el.key}: ${el.value}`;
+      }
 
-    if (value.hasOwnProperty('first')) {
-      result.push(`${f1sep}${key}: ${value.first}`);
-    }
+      const difLines = [];
+      if (el.hasOwnProperty('value1')) {
+        if (el.value1 instanceof Object) {
+          difLines.push(printObj(el.value1, f1sep, el.key, deep));
+        } else {
+          difLines.push(`${sep.repeat(deep - 1)}${f1sep}${el.key}: ${el.value1}`);
+        }
+      }
+      if (el.hasOwnProperty('value2')) {
+        if (el.value2 instanceof Object) {
+          difLines.push(printObj(el.value2, f2sep, el.key, deep));
+        } else {
+          difLines.push(`${sep.repeat(deep - 1)}${f2sep}${el.key}: ${el.value2}`);
+        }
+      }
+      return difLines;
+    }, []).join('\n');
 
-    if (value.hasOwnProperty('second')) {
-      result.push(`${f2sep}${key}: ${value.second}`);
-    }
+    return text;
+  };
 
-    return [...lines, ...result];
-  }, []).join(',\n');
-
-  return `{\n${text}\n}`;
+  return `{\n${iter(obj, 1)}\n}`;
 };
 
 export const compareFiles = (path1, path2) => {

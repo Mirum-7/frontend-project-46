@@ -1,83 +1,10 @@
-import { dirname } from 'path';
-import { fileURLToPath } from 'url';
-import path from 'node:path';
-import genDiff, {
-  compareObjects,
-  getUnionKeys,
-} from '../src/index.js';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-const getFixturePath = (filename) => path.join(__dirname, '..', '__fixtures__', filename);
-
-let obj1;
-let obj2;
+import stylish from '../src/formatters/stylish';
 
 let comparedObj;
 
 let genDiffStylishResult;
 
 beforeAll(() => {
-  obj1 = {
-    common: {
-      setting1: 'Value 1',
-      setting2: 200,
-      setting3: true,
-      setting6: {
-        key: 'value',
-        doge: {
-          wow: '',
-        },
-      },
-    },
-    group1: {
-      baz: 'bas',
-      foo: 'bar',
-      nest: {
-        key: 'value',
-      },
-    },
-    group2: {
-      abc: 12345,
-      deep: {
-        id: 45,
-      },
-    },
-  };
-
-  obj2 = {
-    common: {
-      follow: false,
-      setting1: 'Value 1',
-      setting3: null,
-      setting4: 'blah blah',
-      setting5: {
-        key5: 'value5',
-      },
-      setting6: {
-        key: 'value',
-        ops: 'vops',
-        doge: {
-          wow: 'so much',
-        },
-      },
-    },
-    group1: {
-      foo: 'bar',
-      baz: 'bars',
-      nest: 'str',
-    },
-    group3: {
-      deep: {
-        id: {
-          number: 45,
-        },
-      },
-      fee: 100500,
-    },
-  };
-
   comparedObj = [
     {
       key: 'common',
@@ -223,20 +150,6 @@ beforeAll(() => {
 }`;
 });
 
-test('getUnionKeys', () => {
-  expect(getUnionKeys(obj1, obj2)).toEqual(['common', 'group1', 'group2', 'group3']);
-});
-
-test('compareObjects', () => {
-  expect(compareObjects(obj1, obj2)).toEqual(comparedObj);
-});
-
-describe('genDiff', () => {
-  test('default formatter(stylish)', () => {
-    expect(genDiff(getFixturePath('file1.json'), getFixturePath('file2.json'), { format: 'stylish' }))
-      .toEqual(genDiffStylishResult); // json file
-
-    expect(genDiff(getFixturePath('file1.yaml'), getFixturePath('file2.yaml'), { format: 'stylish' }))
-      .toEqual(genDiffStylishResult); // yaml file
-  });
+test('stylish', () => {
+  expect(stylish(comparedObj)).toEqual(genDiffStylishResult);
 });

@@ -11,27 +11,34 @@ const getFixturePath = (filename) => path.join(__dirname, '..', '__fixtures__', 
 let jsonFileName;
 let yamlFileName;
 let txtFileName;
+let obj;
 
 beforeAll(() => {
   jsonFileName = 'file.json';
   yamlFileName = 'file.yaml';
   txtFileName = 'file.txt';
-});
-
-test('parse file', () => {
-  let content = parse(getFixturePath(jsonFileName));
-  const result = {
+  obj = {
     host: 'hexlet.io',
     timeout: 50,
     proxy: '123.234.53.22',
     follow: false,
   };
+});
 
-  expect(content).toEqual(result); // json file
+test('json file', () => {
+  const content = parse(getFixturePath(jsonFileName));
 
-  content = parse(getFixturePath(yamlFileName));
+  expect(content).toEqual(obj); // json file
+});
 
-  expect(content).toEqual(result); // yaml file
+test('yaml file', () => {
+  const content = parse(getFixturePath(yamlFileName));
 
-  expect(() => { parse(getFixturePath(txtFileName)); }).toThrow(); // other file
+  expect(content).toEqual(obj); // yaml file
+});
+
+test('other file(error massage)', () => {
+  expect(() => {
+    parse(getFixturePath(txtFileName));
+  }).toThrow(); // other file
 });

@@ -1,34 +1,19 @@
 import { program } from 'commander';
 import _ from 'lodash';
-import { readFileSync } from 'node:fs';
-import yaml from 'js-yaml';
-import Path from 'node:path';
+import parse from './parser.js';
 // import  { Command } from 'commander';
 // const program = new Command();
 // Я увидел такой вариант в доках
 export const getUnionKeys = (...objects) => _.union(...objects.map(Object.keys)).sort();
 
-export const parse = (path) => {
-  const extension = Path.extname(path);
-  const data = readFileSync(Path.resolve(path), 'utf-8');
-
-  if (extension === '.json') {
-    return JSON.parse(data);
-  }
-  if (extension === '.yaml' || extension === '.yml') {
-    return yaml.load(data);
-  }
-  throw new Error('Unknown file extension');
-};
-
-const genDiff = (obj1, obj2) => {
+export const compareObjects = (obj1, obj2) => {
   const keys = getUnionKeys(obj1, obj2);
 
   const result = keys.map((key) => {
     const obj = { key };
 
     if (obj1[key] instanceof Object && obj2[key] instanceof Object) {
-      obj.children = genDiff(obj1[key], obj2[key]);
+      obj.children = compareObjects(obj1[key], obj2[key]);
       return obj;
     }
 
@@ -48,7 +33,7 @@ const genDiff = (obj1, obj2) => {
   return result;
 };
 
-export const printDiff = (obj) => {
+export const stylish = (obj) => { // говнокод
   const sep = '    ';
   const f1sep = '  - ';
   const f2sep = '  + ';
@@ -100,13 +85,19 @@ export const printDiff = (obj) => {
   return `{\n${iter(obj, 1)}\n}`;
 };
 
-export const compareFiles = (path1, path2) => {
+const genDiff = (path1, path2, options = { format: 'stylish' }) => {
   const obj1 = parse(path1);
   const obj2 = parse(path2);
 
-  const comparedObj = genDiff(obj1, obj2);
+  const comparedObj = compareObjects(obj1, obj2);
 
-  console.log(printDiff(comparedObj));
+  let result;
+
+  if (options.format === 'stylish') {
+    result = stylish(comparedObj);
+  }
+
+  return result;
 };
 
 export const runGenDiffCommand = () => {
@@ -116,10 +107,10 @@ export const runGenDiffCommand = () => {
     .version('1.0.0');
 
   program
-    .option('-f, --format <type>', 'output format')
+    .option('-f, --format <type>', 'output format', 'stylish')
     .argument('<filepath1>')
     .argument('<filepath2>')
-    .action(compareFiles);
+    .action((path1, path2, options) => { console.log(genDiff(path1, path2, options)); });
 
   program.parse(process.argv);
 };

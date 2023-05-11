@@ -1,26 +1,85 @@
-import path from 'node:path';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
-import genDiff, { getUnionKeys, parse, printDiff } from '../src/index.js';
+import path from 'node:path';
+import genDiff, {
+  compareObjects,
+  getUnionKeys,
+  stylish,
+} from '../src/index.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const getFixturePath = (filename) => path.join(__dirname, '..', '__fixtures__', filename);
 
-let jsonFileName;
-let yamlFileName;
-
 let obj1;
 let obj2;
 
-let genDiffObj;
+let comparedObj;
+
+let genDiffStylishResult;
 
 beforeAll(() => {
-  jsonFileName = 'file.json';
-  yamlFileName = 'file.yaml';
+  obj1 = {
+    common: {
+      setting1: 'Value 1',
+      setting2: 200,
+      setting3: true,
+      setting6: {
+        key: 'value',
+        doge: {
+          wow: '',
+        },
+      },
+    },
+    group1: {
+      baz: 'bas',
+      foo: 'bar',
+      nest: {
+        key: 'value',
+      },
+    },
+    group2: {
+      abc: 12345,
+      deep: {
+        id: 45,
+      },
+    },
+  };
 
-  genDiffObj = [
+  obj2 = {
+    common: {
+      follow: false,
+      setting1: 'Value 1',
+      setting3: null,
+      setting4: 'blah blah',
+      setting5: {
+        key5: 'value5',
+      },
+      setting6: {
+        key: 'value',
+        ops: 'vops',
+        doge: {
+          wow: 'so much',
+        },
+      },
+    },
+    group1: {
+      foo: 'bar',
+      baz: 'bars',
+      nest: 'str',
+    },
+    group3: {
+      deep: {
+        id: {
+          number: 45,
+        },
+      },
+      fee: 100500,
+    },
+  };
+
+  comparedObj = [
     {
       key: 'common',
       children: [
@@ -118,99 +177,63 @@ beforeAll(() => {
       },
     },
   ];
-});
 
-beforeEach(() => {
-  obj1 = {
+  genDiffStylishResult = `{
     common: {
-      setting1: 'Value 1',
-      setting2: 200,
-      setting3: true,
-      setting6: {
-        key: 'value',
-        doge: {
-          wow: '',
-        },
-      },
-    },
+      + follow: false
+        setting1: Value 1
+      - setting2: 200
+      - setting3: true
+      + setting3: null
+      + setting4: blah blah
+      + setting5: {
+            key5: value5
+        }
+        setting6: {
+            doge: {
+              - wow: 
+              + wow: so much
+            }
+            key: value
+          + ops: vops
+        }
+    }
     group1: {
-      baz: 'bas',
-      foo: 'bar',
-      nest: {
-        key: 'value',
-      },
-    },
-    group2: {
-      abc: 12345,
-      deep: {
-        id: 45,
-      },
-    },
-  };
-
-  obj2 = {
-    common: {
-      follow: false,
-      setting1: 'Value 1',
-      setting3: null,
-      setting4: 'blah blah',
-      setting5: {
-        key5: 'value5',
-      },
-      setting6: {
-        key: 'value',
-        ops: 'vops',
-        doge: {
-          wow: 'so much',
-        },
-      },
-    },
-    group1: {
-      foo: 'bar',
-      baz: 'bars',
-      nest: 'str',
-    },
-    group3: {
-      deep: {
-        id: {
-          number: 45,
-        },
-      },
-      fee: 100500,
-    },
-  };
+      - baz: bas
+      + baz: bars
+        foo: bar
+      - nest: {
+            key: value
+        }
+      + nest: str
+    }
+  - group2: {
+        abc: 12345
+        deep: {
+            id: 45
+        }
+    }
+  + group3: {
+        deep: {
+            id: {
+                number: 45
+            }
+        }
+        fee: 100500
+    }
+}`;
 });
 
-describe('work with file', () => {
-  test('parse file', () => {
-    let content = parse(getFixturePath(jsonFileName));
-    const result = {
-      host: 'hexlet.io',
-      timeout: 50,
-      proxy: '123.234.53.22',
-      follow: false,
-    };
-
-    expect(content).toEqual(result); // json file
-
-    content = parse(getFixturePath(yamlFileName));
-
-    expect(content).toEqual(result); // yaml file
-  });
+test('getUnionKeys', () => {
+  expect(getUnionKeys(obj1, obj2)).toEqual(['common', 'group1', 'group2', 'group3']);
 });
 
-describe('work with object', () => {
-  test('getUnionKeys', () => {
-    expect(getUnionKeys(obj1, obj2)).toEqual(['common', 'group1', 'group2', 'group3']);
-  });
+test('compareObjects', () => {
+  expect(compareObjects(obj1, obj2)).toEqual(comparedObj);
+});
 
-  test('genDiff', () => {
-    expect(genDiff(obj1, obj2)).toEqual(genDiffObj);
-  });
-
-  test('printDiff', () => {
-    console.log(printDiff(genDiffObj));
-    expect(printDiff(genDiffObj)).toEqual(`{
+test('stylish', () => {
+  expect(stylish(comparedObj)).toEqual(`{
     common: {
       + follow: false
         setting1: Value 1
@@ -254,5 +277,10 @@ describe('work with object', () => {
         fee: 100500
     }
 }`);
+});
+
+describe('genDiff', () => {
+  test('default formatter(stylish)', () => {
+    expect(genDiff(getFixturePath('file1.json'), getFixturePath('file2.json'))).toEqual(genDiffStylishResult);
   });
 });

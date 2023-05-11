@@ -17,6 +17,7 @@ let obj2;
 let comparedObj;
 
 let genDiffStylishResult;
+let genDiffPlainResult;
 
 beforeAll(() => {
   obj1 = {
@@ -221,6 +222,17 @@ beforeAll(() => {
         fee: 100500
     }
 }`;
+  genDiffPlainResult = `Property 'common.follow' was added with value: false
+Property 'common.setting2' was removed
+Property 'common.setting3' was updated. From true to null
+Property 'common.setting4' was added with value: 'blah blah'
+Property 'common.setting5' was added with value: [complex value]
+Property 'common.setting6.doge.wow' was updated. From '' to 'so much'
+Property 'common.setting6.ops' was added with value: 'vops'
+Property 'group1.baz' was updated. From 'bas' to 'bars'
+Property 'group1.nest' was updated. From [complex value] to 'str'
+Property 'group2' was removed
+Property 'group3' was added with value: [complex value]`;
 });
 
 test('getUnionKeys', () => {
@@ -233,10 +245,11 @@ test('compareObjects', () => {
 
 describe('genDiff', () => {
   test('default formatter(stylish)', () => {
-    expect(genDiff(getFixturePath('file1.json'), getFixturePath('file2.json')))
-      .toEqual(genDiffStylishResult); // json file
-
-    expect(genDiff(getFixturePath('file1.yaml'), getFixturePath('file2.yaml')))
-      .toEqual(genDiffStylishResult); // yaml file
+    expect(genDiff(getFixturePath('file1.json'), getFixturePath('file2.yaml')))
+      .toEqual(genDiffStylishResult);
+  });
+  test('plain formatter', () => {
+    expect(genDiff(getFixturePath('file1.json'), getFixturePath('file2.yaml'), 'plain'))
+      .toEqual(genDiffPlainResult);
   });
 });

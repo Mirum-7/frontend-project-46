@@ -1,8 +1,10 @@
-import stylish from '../../src/formatters/stylish.js';
+import stylish, { stringify } from '../../src/formatters/stylish.js';
 
 let comparedObj;
 
 let genDiffStylishResult;
+
+let obj;
 
 beforeAll(() => {
   comparedObj = [
@@ -148,6 +150,78 @@ beforeAll(() => {
         fee: 100500
     }
 }`;
+
+  obj = {
+    key1: 1,
+    key2: 'value1',
+    tree: {
+      key1: 'some text',
+      treeInTree: {
+        key12: 1,
+      },
+      str: 'text',
+    },
+    tree2: {
+      num: 123,
+    },
+    key52: 12,
+  };
+});
+
+describe('stringify', () => {
+  test('default options test', () => {
+    expect(stringify(obj)).toEqual(`{
+    key1: 1
+    key2: value1
+    tree: {
+        key1: some text
+        treeInTree: {
+            key12: 1
+        }
+        str: text
+    }
+    tree2: {
+        num: 123
+    }
+    key52: 12
+}`);
+  });
+
+  test('sep test', () => {
+    expect(stringify(obj, '--')).toEqual(`{
+--key1: 1
+--key2: value1
+--tree: {
+----key1: some text
+----treeInTree: {
+------key12: 1
+----}
+----str: text
+--}
+--tree2: {
+----num: 123
+--}
+--key52: 12
+}`);
+  });
+
+  test('deep test', () => {
+    expect(stringify(obj, '    ', 1)).toEqual(`{
+        key1: 1
+        key2: value1
+        tree: {
+            key1: some text
+            treeInTree: {
+                key12: 1
+            }
+            str: text
+        }
+        tree2: {
+            num: 123
+        }
+        key52: 12
+    }`);
+  });
 });
 
 test('stylish', () => {

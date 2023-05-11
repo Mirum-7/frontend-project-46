@@ -13,7 +13,7 @@ export const compareObjects = (obj1, obj2) => {
   const tree = keys.map((key) => {
     const obj = { key };
 
-    if (obj1[key] instanceof Object && obj2[key] instanceof Object) {
+    if (_.isObject(obj1[key]) && _.isObject(obj2[key])) {
       obj.children = compareObjects(obj1[key], obj2[key]);
       return obj;
     }

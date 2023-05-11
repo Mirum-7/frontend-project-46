@@ -233,10 +233,10 @@ test('compareObjects', () => {
 
 describe('genDiff', () => {
   test('default formatter(stylish)', () => {
-    expect(genDiff(getFixturePath('file1.json'), getFixturePath('file2.json'), { format: 'stylish' }))
+    expect(genDiff(getFixturePath('file1.json'), getFixturePath('file2.json')))
       .toEqual(genDiffStylishResult); // json file
 
-    expect(genDiff(getFixturePath('file1.yaml'), getFixturePath('file2.yaml'), { format: 'stylish' }))
+    expect(genDiff(getFixturePath('file1.yaml'), getFixturePath('file2.yaml')))
       .toEqual(genDiffStylishResult); // yaml file
   });
 });

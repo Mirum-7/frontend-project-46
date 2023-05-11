@@ -1,7 +1,7 @@
 import { program } from 'commander';
 import _ from 'lodash';
 import parse from './parser.js';
-import stylish from './formatters/stylish.js';
+import getFormatter from './formatters/index.js';
 // import  { Command } from 'commander';
 // const program = new Command();
 // Я увидел такой вариант в доках
@@ -34,19 +34,15 @@ export const compareObjects = (obj1, obj2) => {
   return tree;
 };
 
-const genDiff = (path1, path2, options) => {
+const genDiff = (path1, path2, format = 'stylish') => {
   const obj1 = parse(path1);
   const obj2 = parse(path2);
 
   const comparedObj = compareObjects(obj1, obj2);
 
-  let result;
+  const formatter = getFormatter(format);
 
-  if (options.format === 'stylish') {
-    result = stylish(comparedObj);
-  }
-
-  return result;
+  return formatter(comparedObj);
 };
 
 export const runGenDiffCommand = () => {
@@ -59,7 +55,7 @@ export const runGenDiffCommand = () => {
     .option('-f, --format <type>', 'output format', 'stylish')
     .argument('<filepath1>')
     .argument('<filepath2>')
-    .action((path1, path2, options) => { console.log(genDiff(path1, path2, options)); });
+    .action((path1, path2, options) => { console.log(genDiff(path1, path2, options.format)); });
 
   program.parse(process.argv);
 };

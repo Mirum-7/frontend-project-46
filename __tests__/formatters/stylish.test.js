@@ -1,4 +1,4 @@
-import stylish from '../src/formatters/stylish';
+import stylish from '../../src/formatters/stylish.js';
 
 let comparedObj;
 

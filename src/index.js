@@ -1,6 +1,4 @@
 import _ from 'lodash';
-import Path from 'node:path';
-import { readFileSync } from 'node:fs';
 import parse from './parser.js';
 import getFormatter from './formatters/index.js';
 
@@ -43,10 +41,8 @@ export const compareObjects = (obj1, obj2) => {
 };
 
 const genDiff = (path1, path2, format = 'stylish') => {
-  const data1 = readFileSync(Path.resolve(path1), 'utf-8');
-  const data2 = readFileSync(Path.resolve(path2), 'utf-8');
-  const obj1 = parse(data1, Path.extname(path1));
-  const obj2 = parse(data2, Path.extname(path2));
+  const obj1 = parse(path1);
+  const obj2 = parse(path2);
 
   const comparedObj = compareObjects(obj1, obj2);
 

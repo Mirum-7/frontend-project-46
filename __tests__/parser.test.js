@@ -1,29 +1,23 @@
 import parse from '../src/parser.js';
 
-let jsonData;
-let yamlData;
-let obj;
-
-beforeAll(() => {
-  jsonData = `{
+const jsonData = `{
   "host": "hexlet.io",
   "timeout": 50,
   "proxy": "123.234.53.22",
   "follow": false
 }`;
-  yamlData = `---
+const yamlData = `---
 host: hexlet.io
 timeout: 50
 proxy: 123.234.53.22
 follow: false
 `;
-  obj = {
-    host: 'hexlet.io',
-    timeout: 50,
-    proxy: '123.234.53.22',
-    follow: false,
-  };
-});
+const obj = {
+  host: 'hexlet.io',
+  timeout: 50,
+  proxy: '123.234.53.22',
+  follow: false,
+};
 
 test('json file', () => {
   const content = parse(jsonData, '.json');

@@ -1,10 +1,7 @@
-import { program } from 'commander';
 import _ from 'lodash';
 import parse from './parser.js';
 import getFormatter from './formatters/index.js';
-// import  { Command } from 'commander';
-// const program = new Command();
-// Я увидел такой вариант в доках
+
 export const getUnionKeys = (...objects) => _.union(...objects.map(Object.keys)).sort();
 
 export const compareObjects = (obj1, obj2) => {
@@ -43,21 +40,6 @@ const genDiff = (path1, path2, format = 'stylish') => {
   const formatter = getFormatter(format);
 
   return formatter(comparedObj);
-};
-
-export const runGenDiffCommand = () => {
-  program
-    .name('genDiff')
-    .description('Compares two configuration files and shows a difference.')
-    .version('1.0.0');
-
-  program
-    .option('-f, --format <type>', 'output format', 'stylish')
-    .argument('<filepath1>')
-    .argument('<filepath2>')
-    .action((path1, path2, options) => { console.log(genDiff(path1, path2, options.format)); });
-
-  program.parse(process.argv);
 };
 
 export default genDiff;

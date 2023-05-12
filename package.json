@@ -18,7 +18,7 @@
   },
   "homepage": "https://github.com/Mirum-7/frontend-project-46#readme",
   "bin": {
-    "genDiff": "./bin/genDiff.js"
+    "gendiff": "./bin/genDiff.js"
   },
   "jest": {
     "testEnvironment": "node",

@@ -15,19 +15,19 @@ export const createObjPath = (...paths) => paths.filter((el) => el !== '').join(
 const plain = (tree) => {
   const iter = (list, path = '') => {
     const text = list
-      .filter((el) => !el.hasOwnProperty('value'))
+      .filter((el) => el.type !== 'equal')
       .flatMap((el) => {
         const fullPath = createObjPath(path, el.key);
-        if (el.hasOwnProperty('children')) {
-          return iter(el.children, fullPath);
-        }
-        if (el.hasOwnProperty('value1')) {
-          if (el.hasOwnProperty('value2')) {
+        switch (el.type) {
+          case 'added':
+            return `Property '${fullPath}' was added with value: ${createValue(el.value2)}`;
+          case 'deleted':
+            return `Property '${fullPath}' was removed`;
+          case 'tree':
+            return iter(el.children, fullPath);
+          default:
             return `Property '${fullPath}' was updated. From ${createValue(el.value1)} to ${createValue(el.value2)}`;
-          }
-          return `Property '${fullPath}' was removed`;
         }
-        return `Property '${fullPath}' was added with value: ${createValue(el.value2)}`;
       });
     return text;
   };

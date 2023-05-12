@@ -1,22 +1,22 @@
-import path from 'node:path';
-import { dirname } from 'path';
-import { fileURLToPath } from 'url';
 import parse from '../src/parser.js';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-const getFixturePath = (filename) => path.join(__dirname, '..', '__fixtures__', filename);
-
-let jsonFileName;
-let yamlFileName;
-let txtFileName;
+let jsonData;
+let yamlData;
 let obj;
 
 beforeAll(() => {
-  jsonFileName = 'file.json';
-  yamlFileName = 'file.yaml';
-  txtFileName = 'file.txt';
+  jsonData = `{
+  "host": "hexlet.io",
+  "timeout": 50,
+  "proxy": "123.234.53.22",
+  "follow": false
+}`;
+  yamlData = `---
+host: hexlet.io
+timeout: 50
+proxy: 123.234.53.22
+follow: false
+`;
   obj = {
     host: 'hexlet.io',
     timeout: 50,
@@ -26,19 +26,19 @@ beforeAll(() => {
 });
 
 test('json file', () => {
-  const content = parse(getFixturePath(jsonFileName));
+  const content = parse(jsonData, '.json');
 
   expect(content).toEqual(obj); // json file
 });
 
 test('yaml file', () => {
-  const content = parse(getFixturePath(yamlFileName));
+  const content = parse(yamlData, '.yaml');
 
   expect(content).toEqual(obj); // yaml file
 });
 
 test('other file(error massage)', () => {
   expect(() => {
-    parse(getFixturePath(txtFileName));
+    parse('key: value', '.txt');
   }).toThrow(); // other file
 });

@@ -1,51 +1,61 @@
 import stylish, { stringify } from '../../src/formatters/stylish.js';
 
-let comparedObj;
+let tree;
 
 let genDiffStylishResult;
 
 let obj;
 
 beforeAll(() => {
-  comparedObj = [
+  tree = [
     {
       key: 'common',
+      type: 'tree',
       children: [
         {
           key: 'follow',
+          type: 'added',
           value2: false,
         },
         {
           key: 'setting1',
+          type: 'equal',
           value: 'Value 1',
         },
         {
           key: 'setting2',
+          type: 'deleted',
           value1: 200,
         },
         {
           key: 'setting3',
+          type: 'changed',
           value1: true,
           value2: null,
         },
         {
           key: 'setting4',
+          type: 'added',
           value2: 'blah blah',
         },
         {
           key: 'setting5',
+          type: 'added',
           value2: {
             key5: 'value5',
           },
         },
         {
           key: 'setting6',
+          type: 'tree',
           children: [
             {
               key: 'doge',
+              type: 'tree',
               children: [
                 {
                   key: 'wow',
+                  type: 'changed',
                   value1: '',
                   value2: 'so much',
                 },
@@ -53,10 +63,12 @@ beforeAll(() => {
             },
             {
               key: 'key',
+              type: 'equal',
               value: 'value',
             },
             {
               key: 'ops',
+              type: 'added',
               value2: 'vops',
             },
           ],
@@ -65,18 +77,22 @@ beforeAll(() => {
     },
     {
       key: 'group1',
+      type: 'tree',
       children: [
         {
           key: 'baz',
+          type: 'changed',
           value1: 'bas',
           value2: 'bars',
         },
         {
           key: 'foo',
+          type: 'equal',
           value: 'bar',
         },
         {
           key: 'nest',
+          type: 'changed',
           value1: {
             key: 'value',
           },
@@ -86,6 +102,7 @@ beforeAll(() => {
     },
     {
       key: 'group2',
+      type: 'deleted',
       value1: {
         abc: 12345,
         deep: {
@@ -95,6 +112,7 @@ beforeAll(() => {
     },
     {
       key: 'group3',
+      type: 'added',
       value2: {
         deep: {
           id: {
@@ -225,5 +243,5 @@ describe('stringify', () => {
 });
 
 test('stylish', () => {
-  expect(stylish(comparedObj)).toEqual(genDiffStylishResult);
+  expect(stylish(tree)).toEqual(genDiffStylishResult);
 });

@@ -136,7 +136,8 @@ Property 'group3' was added with value: [complex value]`;
 });
 
 test('create path', () => {
-  expect(createObjPath('key', '', 'key2', '', 'key3.key4', 'key5')).toEqual('key.key2.key3.key4.key5');
+  expect(createObjPath('key', 'key5')).toEqual('key.key5');
+  expect(createObjPath('', 'key5')).toEqual('key5');
 });
 
 test('updateValueIfObject', () => {

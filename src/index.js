@@ -10,33 +10,41 @@ export const compareObjects = (obj1, obj2) => {
   const keys = getUnionKeys(obj1, obj2);
 
   const tree = keys.map((key) => {
-    const obj = { key };
-
     if (_.isObject(obj1[key]) && _.isObject(obj2[key])) {
-      obj.children = compareObjects(obj1[key], obj2[key]);
-      obj.type = 'tree';
-      return obj;
+      return {
+        key,
+        children: compareObjects(obj1[key], obj2[key]),
+        type: 'tree',
+      };
     }
 
     if (_.has(obj1, key) && _.has(obj2, key)) {
       if (obj1[key] === obj2[key]) {
-        obj.value = obj1[key];
-        obj.type = 'equal';
-        return obj;
+        return {
+          key,
+          value: obj1[key],
+          type: 'equal',
+        };
       }
-      obj.value1 = obj1[key];
-      obj.value2 = obj2[key];
-      obj.type = 'changed';
-      return obj;
+      return {
+        key,
+        value1: obj1[key],
+        value2: obj2[key],
+        type: 'changed',
+      };
     }
     if (_.has(obj1, key)) {
-      obj.value1 = obj1[key];
-      obj.type = 'deleted';
-      return obj;
+      return {
+        key,
+        value1: obj1[key],
+        type: 'deleted',
+      };
     }
-    obj.value2 = obj2[key];
-    obj.type = 'added';
-    return obj;
+    return {
+      key,
+      value2: obj2[key],
+      type: 'added',
+    };
   }, {});
 
   return _.sortBy(tree, 'key');

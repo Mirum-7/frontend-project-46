@@ -10,7 +10,7 @@ export const createValue = (value) => {
   return value;
 };
 
-export const createObjPath = (...paths) => paths.filter((el) => el !== '').join('.');
+export const createObjPath = (path1, path2) => [path1, path2].filter((el) => el !== '').join('.');
 
 const plain = (tree) => {
   const iter = (list, path = '') => {

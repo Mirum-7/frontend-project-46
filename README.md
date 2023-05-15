@@ -3,6 +3,9 @@
 [![Actions Status](https://github.com/Mirum-7/frontend-project-46/workflows/run-tests/badge.svg)](https://github.com/Mirum-7/frontend-project-46/actions)
 [![Maintainability](https://api.codeclimate.com/v1/badges/4af4ae66daffa7e5f160/maintainability)](https://codeclimate.com/github/Mirum-7/frontend-project-46/maintainability)
 
+# Description
+Finds differences between two json or yaml files
+
 # Installation
 1) `git clone https://github.com/Mirum-7/frontend-project-46.git`
 2) `npm install`

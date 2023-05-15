@@ -1,7 +1,7 @@
 {
   "name": "@hexlet/code",
   "version": "1.0.0",
-  "description": "[![Actions Status](https://github.com/Mirum-7/frontend-project-46/workflows/hexlet-check/badge.svg)](https://github.com/Mirum-7/frontend-project-46/actions)",
+  "description": "Finds differences between two json or yaml files",
   "main": "./src/index.js",
   "type": "module",
   "scripts": {

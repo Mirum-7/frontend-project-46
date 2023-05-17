@@ -1,17 +1,17 @@
 import plain from './plain.js';
 import stylish from './stylish.js';
 
-const getFormatter = (format) => {
-  switch (format) {
+const format = (tree, type) => {
+  switch (type) {
     case 'stylish':
-      return stylish;
+      return stylish(tree);
     case 'plain':
-      return plain;
+      return plain(tree);
     case 'json':
-      return JSON.stringify;
+      return JSON.stringify(tree);
     default:
-      throw new Error('Unknown format');
+      throw new Error(`Unknown format: ${type}`);
   }
 };
 
-export default getFormatter;
+export default format;

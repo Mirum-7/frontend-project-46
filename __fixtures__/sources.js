@@ -174,3 +174,142 @@ export const genDiffStylishResult = `{
 }`;
 
 export const genDiffJsonResult = '[{"key":"common","children":[{"key":"follow","value2":false,"type":"added"},{"key":"setting1","value":"Value 1","type":"equal"},{"key":"setting2","value1":200,"type":"deleted"},{"key":"setting3","value1":true,"value2":null,"type":"changed"},{"key":"setting4","value2":"blah blah","type":"added"},{"key":"setting5","value2":{"key5":"value5"},"type":"added"},{"key":"setting6","children":[{"key":"doge","children":[{"key":"wow","value1":"","value2":"so much","type":"changed"}],"type":"tree"},{"key":"key","value":"value","type":"equal"},{"key":"ops","value2":"vops","type":"added"}],"type":"tree"}],"type":"tree"},{"key":"group1","children":[{"key":"baz","value1":"bas","value2":"bars","type":"changed"},{"key":"foo","value":"bar","type":"equal"},{"key":"nest","value1":{"key":"value"},"value2":"str","type":"changed"}],"type":"tree"},{"key":"group2","value1":{"abc":12345,"deep":{"id":45}},"type":"deleted"},{"key":"group3","value2":{"deep":{"id":{"number":45}},"fee":100500},"type":"added"}]';
+
+export const objToStringify = {
+  key1: 1,
+  key2: 'value1',
+  tree: {
+    key1: 'some text',
+    treeInTree: {
+      key12: 1,
+    },
+    str: 'text',
+  },
+  tree2: {
+    num: 123,
+  },
+  key52: 12,
+};
+
+export const objToCompare1 = {
+  common: {
+    setting1: 'Value 1',
+    setting2: 200,
+    setting3: true,
+    setting6: {
+      key: 'value',
+      doge: {
+        wow: '',
+      },
+    },
+  },
+  group1: {
+    baz: 'bas',
+    foo: 'bar',
+    nest: {
+      key: 'value',
+    },
+  },
+  group2: {
+    abc: 12345,
+    deep: {
+      id: 45,
+    },
+  },
+};
+
+export const objToCompare2 = {
+  common: {
+    follow: false,
+    setting1: 'Value 1',
+    setting3: null,
+    setting4: 'blah blah',
+    setting5: {
+      key5: 'value5',
+    },
+    setting6: {
+      key: 'value',
+      ops: 'vops',
+      doge: {
+        wow: 'so much',
+      },
+    },
+  },
+  group1: {
+    foo: 'bar',
+    baz: 'bars',
+    nest: 'str',
+  },
+  group3: {
+    deep: {
+      id: {
+        number: 45,
+      },
+    },
+    fee: 100500,
+  },
+};
+
+export const stringifyResult1 = `\
+{
+    key1: 1
+    key2: value1
+    tree: {
+        key1: some text
+        treeInTree: {
+            key12: 1
+        }
+        str: text
+    }
+    tree2: {
+        num: 123
+    }
+    key52: 12
+}`;
+
+export const stringifyResult2 = `\
+{
+--key1: 1
+--key2: value1
+--tree: {
+----key1: some text
+----treeInTree: {
+------key12: 1
+----}
+----str: text
+--}
+--tree2: {
+----num: 123
+--}
+--key52: 12
+}`;
+
+export const jsonData = `\
+{
+  "host": "hexlet.io",
+  "timeout": 50,
+  "proxy": "123.234.53.22",
+  "follow": false
+}`;
+
+export const yamlData = `\
+---
+host: hexlet.io
+timeout: 50
+proxy: 123.234.53.22
+follow: false
+`;
+
+export const parserResult = {
+  host: 'hexlet.io',
+  timeout: 50,
+  proxy: '123.234.53.22',
+  follow: false,
+};
+
+export const treeToErrorFormatter = [
+  {
+    key: 'key',
+    type: 'error',
+  },
+];

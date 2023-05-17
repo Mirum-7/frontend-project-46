@@ -25,8 +25,10 @@ const plain = (tree) => {
             return `Property '${fullPath}' was removed`;
           case 'tree':
             return iter(el.children, fullPath);
-          default:
+          case 'changed':
             return `Property '${fullPath}' was updated. From ${createValue(el.value1)} to ${createValue(el.value2)}`;
+          default:
+            throw new Error(`unknown element type: ${el.type}`);
         }
       });
     return text;

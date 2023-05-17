@@ -27,8 +27,10 @@ const stylish = (tree) => {
             return `${sep.repeat(deep - 1)}${f2sep}${el.key}: ${stringify(el.value2, sep, deep)}`;
           case 'deleted':
             return `${sep.repeat(deep - 1)}${f1sep}${el.key}: ${stringify(el.value1, sep, deep)}`;
-          default:
+          case 'changed':
             return `${sep.repeat(deep - 1)}${f1sep}${el.key}: ${stringify(el.value1, sep, deep)}\n${sep.repeat(deep - 1)}${f2sep}${el.key}: ${stringify(el.value2, sep, deep)}`;
+          default:
+            throw new Error(`unknown element type: ${el.type}`);
         }
       }, [])
       .join('\n');

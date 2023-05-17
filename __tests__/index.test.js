@@ -9,17 +9,10 @@ const __dirname = dirname(__filename);
 
 const getFixturePath = (filename) => path.join(__dirname, '..', '__fixtures__', filename);
 
-describe('genDiff', () => {
-  test('default formatter(stylish)', () => {
-    expect(genDiff(getFixturePath('json/file1.json'), getFixturePath('yaml/file2.yaml')))
-      .toEqual(genDiffStylishResult);
-  });
-  test('plain formatter', () => {
-    expect(genDiff(getFixturePath('json/file1.json'), getFixturePath('yaml/file2.yaml'), 'plain'))
-      .toEqual(genDiffPlainResult);
-  });
-  test('json formatter', () => {
-    expect(genDiff(getFixturePath('json/file1.json'), getFixturePath('yaml/file2.yaml'), 'json'))
-      .toEqual(genDiffJsonResult);
-  });
+test.each([
+  { format: 'stylish', expected: genDiffStylishResult },
+  { format: 'plain', expected: genDiffPlainResult },
+  { format: 'json', expected: genDiffJsonResult },
+])('check $format format', ({ format, expected }) => {
+  expect(genDiff(getFixturePath('./json/file1.json'), getFixturePath('./yaml/file2.yaml'), format)).toEqual(expected);
 });

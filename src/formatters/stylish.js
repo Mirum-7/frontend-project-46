@@ -33,8 +33,7 @@ const stylish = (tree) => {
           default:
             throw new Error(`unknown element type: ${el.type}`);
         }
-      }, [])
-      .join('\n');
+      }, []).join('\n');
 
     return text;
   };

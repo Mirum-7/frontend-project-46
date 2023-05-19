@@ -1,6 +1,7 @@
 import _ from 'lodash';
 
-export const getUnionKeys = (object1, object2) => _.union(...[object1, object2].map(Object.keys));
+export const getUnionKeys = (object1, object2) => _.sortBy(_
+  .union(Object.keys(object1), Object.keys(object2)));
 
 const compare = (obj1, obj2) => {
   const keys = getUnionKeys(obj1, obj2);
@@ -14,14 +15,21 @@ const compare = (obj1, obj2) => {
       };
     }
 
-    if (_.has(obj1, key) && _.has(obj2, key)) {
-      if (obj1[key] === obj2[key]) {
-        return {
-          key,
-          value: obj1[key],
-          type: 'equal',
-        };
-      }
+    if (_.has(obj1, key) && !_.has(obj2, key)) {
+      return {
+        key,
+        value1: obj1[key],
+        type: 'deleted',
+      };
+    }
+    if (!_.has(obj1, key) && _.has(obj2, key)) {
+      return {
+        key,
+        value2: obj2[key],
+        type: 'added',
+      };
+    }
+    if (obj1[key] !== obj2[key]) {
       return {
         key,
         value1: obj1[key],
@@ -29,21 +37,15 @@ const compare = (obj1, obj2) => {
         type: 'changed',
       };
     }
-    if (_.has(obj1, key)) {
-      return {
-        key,
-        value1: obj1[key],
-        type: 'deleted',
-      };
-    }
     return {
       key,
-      value2: obj2[key],
-      type: 'added',
+      value: obj1[key],
+      type: 'equal',
     };
   }, {});
 
-  return _.sortBy(tree, 'key');
+  // return _.sortBy(tree, 'key');
+  return tree;
 };
 
 export default compare;

@@ -44,7 +44,6 @@ const compare = (obj1, obj2) => {
     };
   }, {});
 
-  // return _.sortBy(tree, 'key');
   return tree;
 };
 

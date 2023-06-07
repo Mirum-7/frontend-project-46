@@ -11,4 +11,4 @@ Finds differences between two json or yaml files
 2) `npm ci`
 
 # Use
-[![asciicast](https://asciinema.org/a/kcPeA0SWdE49TvU4QdnQf9udI.svg)](https://asciinema.org/a/kcPeA0SWdE49TvU4QdnQf9udI)
+[![asciicast](https://asciinema.org/a/SSM09lpMjleW8sKjconRIXx9V.svg)](https://asciinema.org/a/SSM09lpMjleW8sKjconRIXx9V)
